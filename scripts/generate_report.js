@@ -472,7 +472,7 @@ function generateHtmlReport() {
   });
     const h1s = document.querySelectorAll("h1");
 const timestampPlaceholder2 = "current-date 东秦工学馆空闲教室表";
-  paragraphs.forEach((h1) => {
+  h1s.forEach((h1) => {
     if (h1.textContent.includes(timestampPlaceholder2)) {
       h1.textContent = `${getBeijingDate()} 东秦工学馆空闲教室表`;
     }
