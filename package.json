@@ -1,0 +1,15 @@
+{
+  "name": "gxg-classroom-checker",
+  "version": "1.0.0",
+  "description": "Automatic classroom availability checker for GXG",
+  "scripts": {
+    "test": "playwright test",
+    "report": "node scripts/generate_report.js"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.29",
+    "playwright": "^1.52.0",
+    "jsdom": "^26.1.0"
+  }
+}
