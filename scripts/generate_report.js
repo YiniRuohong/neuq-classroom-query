@@ -51,14 +51,9 @@ const htmlTemplate = `
 </head>
 
 <body>
-    <h1><span id="current-date"></span> 东秦工学馆空闲教室表</h1>
+    <h1>current-date 东秦工学馆空闲教室表</h1>
     <p>本空闲教室表更新于YYYY/MM/DD HH:MM</p>
     <p>Powered by Tsiaohan Wang</p>
-    <script>
-        const now = new Date();
-        const dateString = now.toLocaleDateString();
-        document.getElementById("current-date").textContent = dateString;
-    </script>
     <hr>
     <ul>
         <li>上午第1-2节</li>
@@ -390,6 +385,22 @@ function getBeijingTime() {
     "hour"
   )}:${getPart("minute")}`;
 }
+function getBeijingDate() {
+  const now = new Date();
+  // 通过Intl.DateTimeFormat获取指定时区的格式化时间更可靠
+  const formatter = new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai", // 北京时间对应的时区
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  const parts = formatter.formatToParts(now);
+  const getPart = (type) => parts.find((part) => part.type === type)?.value;
+  return `${getPart("year")}/${getPart("month")}/${getPart("day")}`;
+}
 
 // 辅助函数：处理单个JSON文件数据，按楼层组织教室号
 function processJsonDataForSlot(jsonData) {
@@ -453,10 +464,17 @@ function generateHtmlReport() {
 
   // 1. 更新时间戳
   const paragraphs = document.querySelectorAll("p");
-  const timestampPlaceholder = "本空闲教室表更新于YYYY/MM/DD HH:MM";
+  const timestampPlaceholder1 = "本空闲教室表更新于YYYY/MM/DD HH:MM";
   paragraphs.forEach((p) => {
-    if (p.textContent.includes(timestampPlaceholder)) {
+    if (p.textContent.includes(timestampPlaceholder1)) {
       p.textContent = `本空闲教室表更新于${getBeijingTime()}`;
+    }
+  });
+    const h1s = document.querySelectorAll("h1");
+const timestampPlaceholder2 = "current-date 东秦工学馆空闲教室表";
+  paragraphs.forEach((h1) => {
+    if (h1.textContent.includes(timestampPlaceholder2)) {
+      h1.textContent = `${getBeijingDate()} 东秦工学馆空闲教室表`;
     }
   });
 
