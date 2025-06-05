@@ -6,16 +6,6 @@
 可使用的楼代号与页面中的下拉列表保持一致，如 `gongxueguan`、`jichulou` 等。
 默认生成 `gongxueguan.html`，页面内包含下拉框，可在不同教学楼页面之间切换。
 
-运行 Playwright 测试需要安装浏览器。如果无法通过 `npx playwright install`
- 下载官方浏览器，可在系统中安装 `chromium-browser` 并在运行测试前设
- 置环境变量 `CHROMIUM_PATH` 指向其可执行文件路径。例如：
-
-```bash
-sudo apt-get update && sudo apt-get install -y chromium-browser
-CHROMIUM_PATH=/usr/bin/chromium-browser GXG_USERNAME=你的学号 \
-GXG_PASSWORD=你的密码 npm test
-```
-
 运行任意楼代号生成页面后，脚本会同时更新 `index.html` 作为导航页，
 其中的下拉列表可以在各教学楼页面之间切换并自动刷新。
 
@@ -24,6 +14,11 @@ GXG_PASSWORD=你的密码 npm test
 可以通过更改scripts/generate_report.js来变换HTML样式。
 
 由于generate_report.js需要用到`jsdom`，在本地测试时确保安装了该包。
+
+
+本地测试时，可在环境变量 `GXG_USERNAME` 和 `GXG_PASSWORD` 中提供登录凭据，
+或直接在 tests/classroom-query.spec.ts 中替换占位字符串。要查询不同教学楼，可通过
+环境变量 `GXG_BUILDING` 指定下拉框的值（如 `1` 表示工学馆，`2` 表示基础楼等）。
 
 本地测试时，可在环境变量 `GXG_USERNAME` 和 `GXG_PASSWORD` 中提供登录凭据，
 或直接在 tests/classroom-query.spec.ts 中替换占位字符串。

@@ -51,17 +51,15 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // 定位登录按钮。使用复合选择器，匹配 <button> 元素，且其 class 包含 'submitBtn'，type 属性为 'submit'。
   // [可调参数]: 'button.submitBtn[type="submit"]' - 如果登录按钮的HTML标签、类名或属性发生变化，此选择器需要更新。
   const loginButton = page.locator('button.submitBtn[type="submit"]');
-  console.log('正在点击登录按钮...');
-  // 点击登录按钮。
-  await loginButton.click();
-
-  // 定义登录成功后期望跳转到的主页URL。
-  // [可调参数]: 'https://jwxt.neuq.edu.cn/eams/homeExt.action' - 如果登录成功后的目标URL改变，需要更新此字符串。
+  console.log('正在点击登录按钮并等待跳转...');
+  // 期望的登录成功后页面 URL
   const homePageURL = 'https://jwxt.neuq.edu.cn/eams/homeExt.action';
-  // 注意：此处使用固定时长的等待。更健壮的做法是使用 page.waitForURL(homePageURL, { timeout: ... })
-  // 来显式等待URL变为期望的主页URL，或者等待主页上的某个特定元素出现，以确认登录成功和页面跳转完成。
-  // 当前的固定等待可能因网络波动或服务器响应慢而不稳定。
-  await page.waitForTimeout(operationDelay);
+  // 点击登录按钮并等待页面跳转完成
+  await Promise.all([
+    page.waitForURL(homePageURL, { timeout: 60000 }),
+    loginButton.click(),
+  ]);
+  console.log('登录成功，已跳转到主页。');
 
   // --- 2. 导航到空闲教室查询页面 ---
   // 定义空闲教室查询页面的URL。
@@ -167,10 +165,22 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // 定位“教学楼：”下拉选择框。使用ID选择器 '#building'。
   // [可调参数]: '#building' - 如果教学楼下拉框的HTML ID属性改变，此选择器需要更新。
   const buildingSelect = page.locator('#building');
-  console.log('正在选择 "教学楼：" 为 "工学馆" (值为 "1")...');
-  // 选择“工学馆”。假设“工学馆”选项的value属性为"1"。
-  // [可调参数]: { value: '1' } - “工学馆”或其他目标教学楼的 <option> 标签的 value 属性值。需在网页源码中确认。
-  await buildingSelect.selectOption({ value: '1' });
+  const buildingValue = process.env.GXG_BUILDING || '1';
+  const buildingMap = {
+    '1': '工学馆',
+    '2': '基础楼',
+    '3': '综合实验楼',
+    '4': '地质楼',
+    '5': '管理楼',
+    '6': '大学会馆',
+    '7': '旧实验楼',
+    '8': '人文楼',
+    '9': '科技楼',
+  } as Record<string, string>;
+  const buildingName = buildingMap[buildingValue] || buildingValue;
+  console.log(`正在选择 "教学楼：" 为 "${buildingName}" (值为 "${buildingValue}")...`);
+  // 选择目标教学楼
+  await buildingSelect.selectOption({ value: buildingValue });
   // 等待一小段时间，让选择操作完成后页面可能发生的动态更新（如下拉框联动）。
   await page.waitForTimeout(interactionDelay);
 
