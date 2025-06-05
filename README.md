@@ -16,12 +16,11 @@
 由于generate_report.js需要用到`jsdom`，在本地测试时确保安装了该包。
 
 
+
 本地测试时，可在环境变量 `GXG_USERNAME` 和 `GXG_PASSWORD` 中提供登录凭据，
 或直接在 tests/classroom-query.spec.ts 中替换占位字符串。要查询不同教学楼，可通过
 环境变量 `GXG_BUILDING` 指定下拉框的值（如 `1` 表示工学馆，`2` 表示基础楼等）。
 
-本地测试时，可在环境变量 `GXG_USERNAME` 和 `GXG_PASSWORD` 中提供登录凭据，
-或直接在 tests/classroom-query.spec.ts 中替换占位字符串。
 
 若要部署到GitHub Actions中自动化执行，请在仓库设置中添加两个Repository secrets：`GXG_USERNAME`设为你的学号；`GXG_PASSWORD`设为你的密码。
 

@@ -51,15 +51,14 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // 定位登录按钮。使用复合选择器，匹配 <button> 元素，且其 class 包含 'submitBtn'，type 属性为 'submit'。
   // [可调参数]: 'button.submitBtn[type="submit"]' - 如果登录按钮的HTML标签、类名或属性发生变化，此选择器需要更新。
   const loginButton = page.locator('button.submitBtn[type="submit"]');
-  console.log('正在点击登录按钮并等待跳转...');
-  // 期望的登录成功后页面 URL
+
+  console.log('正在点击登录按钮...');
+  await loginButton.click();
+
+  // 定义登录成功后期望跳转到的主页URL
   const homePageURL = 'https://jwxt.neuq.edu.cn/eams/homeExt.action';
-  // 点击登录按钮并等待页面跳转完成
-  await Promise.all([
-    page.waitForURL(homePageURL, { timeout: 60000 }),
-    loginButton.click(),
-  ]);
-  console.log('登录成功，已跳转到主页。');
+  // 使用固定等待时间而不是等待URL跳转，以避免因网络问题导致超时
+  await page.waitForTimeout(operationDelay);
 
   // --- 2. 导航到空闲教室查询页面 ---
   // 定义空闲教室查询页面的URL。
