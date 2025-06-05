@@ -8,6 +8,9 @@ const config: PlaywrightTestConfig = {
   use: {
     navigationTimeout: 30000,  // 导航超时设置为30秒
     actionTimeout: 15000,    // 动作超时设置为15秒
+    browserName: 'chromium',
+    executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
+    headless: true,
   },
   retries: 0,  // 不重试失败的测试
   reporter: 'list',  // 使用列表形式的报告
