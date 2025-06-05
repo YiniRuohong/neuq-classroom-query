@@ -2,6 +2,21 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM } = require("jsdom");
 
+// 处理命令行参数或环境变量来确定要生成的教学楼名称和代码
+const buildingArg = process.env.BUILDING_CODE || process.argv[2] || "gongxueguan";
+const buildingMap = {
+  gongxueguan: "工学馆",
+  jichulou: "基础楼",
+  shiyanlou: "综合实验楼",
+  dizhilou: "地质楼",
+  guanlilou: "管理楼",
+  dahuiguan: "大学会馆",
+  jiusy: "旧实验楼",
+  renwenlou: "人文楼",
+  keji: "科技楼",
+};
+const buildingName = buildingMap[buildingArg] || "工学馆";
+
 // HTML 样板字符串
 const htmlTemplate = `
 <!DOCTYPE html>
@@ -10,7 +25,7 @@ const htmlTemplate = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>东秦工学馆空闲教室表</title>
+    <title>东秦${buildingName}空闲教室表</title>
     <style>
         body {
             max-width: 1200px;
@@ -59,7 +74,16 @@ const htmlTemplate = `
 </head>
 
 <body>
-    <h1>current-date🏫东秦工学馆空闲教室表</h1>
+    <div style="text-align:center;margin-bottom:20px;">
+      <label for="buildingSelect">切换教学楼：</label>
+      <select id="buildingSelect">
+        ${Object.entries(buildingMap).map(([code, name]) => {
+          const selected = code === buildingArg ? "selected" : "";
+          return `<option value="${code}" ${selected}>${name}</option>`;
+        }).join('')}
+      </select>
+    </div>
+    <h1>current-date🏫东秦${buildingName}空闲教室表</h1>
     <p align=left>本空闲教室表更新于YYYY/MM/DD HH:MM</p>
     <p align=center><u>下划线</u>表示该教室在上一时间段未处于空闲状态</p>
     <p align=center><strong>靛色粗体</strong>表示该教室全天(第1-12节)处于空闲</p>
@@ -357,6 +381,14 @@ const htmlTemplate = `
     </ul>
     <hr>
     <p align=center>Powered by Tsiaohan Wang</p>
+    <script>
+      document.getElementById('buildingSelect').addEventListener('change', function () {
+        var code = this.value;
+        if(code !== '${buildingArg}') {
+          window.location.href = code + '.html';
+        }
+      });
+    </script>
 </body>
 
 </html>
@@ -365,8 +397,8 @@ const htmlTemplate = `
 
 // JSON文件所在的目录 (父目录下的output文件夹)
 const jsonDir = path.join(__dirname, "..", "output");
-// 生成的HTML文件名
-const outputHtmlFile = path.join(__dirname, "..", "index.html");
+// 生成的HTML文件名，根据教学楼代码命名
+const outputHtmlFile = path.join(__dirname, "..", `${buildingArg}.html`);
 
 // 时间段标签与JSON文件后缀的映射
 // 新增 isIndividualSlot 标志，用于识别构成全天的小节数据
@@ -406,7 +438,7 @@ function getBeijingDate() {
 }
 
 
-// 辅助函数：从JSON数据中提取所有符合条件的工学馆教室号到一个Set中
+// 辅助函数：从JSON数据中提取所有符合当前教学楼的教室号到一个Set中
 function getAllClassroomsFromData(jsonData) {
     const classrooms = new Set(); // 使用Set来存储教室号，自动去重
     // 检查jsonData是否有效且为数组
@@ -415,12 +447,12 @@ function getAllClassroomsFromData(jsonData) {
     }
     // 遍历jsonData中的每个条目
     for (const entry of jsonData) {
-        // 确保条目是关于“工学馆”的，并且具有“名称”字段
-        if (entry["教学楼"] === "工学馆" && entry["名称"]) {
+        // 确保条目是关于当前教学楼，并且具有“名称”字段
+        if (entry["教学楼"] === buildingName && entry["名称"]) {
             let classroomName = entry["名称"]; // 获取教室名称
-            // 如果教室名称以“工学馆”开头，则移除此前缀
-            if (classroomName.startsWith("工学馆")) {
-                classroomName = classroomName.substring("工学馆".length).trim();
+            // 如果教室名称以楼名开头，则移除此前缀
+            if (classroomName.startsWith(buildingName)) {
+                classroomName = classroomName.substring(buildingName.length).trim();
             }
             // 确保处理后的教室名称是纯数字（例如 "101", "410"）
             if (/^\d+$/.test(classroomName)) {
@@ -494,12 +526,12 @@ function processJsonDataForSlot(jsonData, previousSlotClassrooms, currentSlotMap
 
   // 遍历jsonData中的每个教室条目
   for (const entry of jsonData) {
-    // 确保条目是关于“工学馆”的，并且具有“名称”字段
-    if (entry["教学楼"] === "工学馆" && entry["名称"]) {
+    // 确保条目是关于当前教学楼，并且具有“名称”字段
+    if (entry["教学楼"] === buildingName && entry["名称"]) {
       let classroomName = entry["名称"]; // 获取原始教室名称
-      // 如果教室名称以“工学馆”开头，则移除此前缀并去除首尾空格
-      if (classroomName.startsWith("工学馆")) {
-        classroomName = classroomName.substring("工学馆".length).trim();
+      // 如果教室名称以楼名开头，则移除此前缀并去除首尾空格
+      if (classroomName.startsWith(buildingName)) {
+        classroomName = classroomName.substring(buildingName.length).trim();
       }
 
       // 确保处理后的教室名称是纯数字（例如 "101", "410"）
@@ -573,10 +605,10 @@ function generateHtmlReport() {
   });
   // 更新<h1>标题中的日期
   const h1s = document.querySelectorAll("h1"); // 获取所有的<h1>元素
-  const timestampPlaceholder2 = "current-date🏫东秦工学馆空闲教室表"; // 定义日期占位符
+  const timestampPlaceholder2 = `current-date🏫东秦${buildingName}空闲教室表`; // 定义日期占位符
   h1s.forEach((h1) => { // 遍历每个<h1>元素
     if (h1.textContent.includes(timestampPlaceholder2)) { // 如果<h1>元素的文本内容包含占位符
-      h1.textContent = `${getBeijingDate()}🏫东秦工学馆空闲教室表`; // 将占位符替换为当前的北京日期
+      h1.textContent = `${getBeijingDate()}🏫东秦${buildingName}空闲教室表`; // 将占位符替换为当前的北京日期
     }
   });
 
@@ -653,7 +685,7 @@ function generateHtmlReport() {
           rows.forEach((row) => { // 遍历每一行
             if (row.cells.length >= 2) { // 确保行至少有两个单元格（楼层和教室）
               const floorCellText = row.cells[0].textContent.trim(); // 获取第一个单元格（楼层）的文本
-              const floorKey = floorCellText.replace("工学馆", "").trim(); // 从楼层文本中移除"工学馆"前缀，得到如"1F"的键
+              const floorKey = floorCellText.replace(buildingName, "").trim(); // 从楼层文本中移除楼名前缀，得到如"1F"的键
               const roomsCell = row.cells[1]; // 获取第二个单元格（教室）
               // 将处理后的教室字符串（可能包含<u>或<strong>标签）填充到单元格的innerHTML中
               // 如果processedFloors中没有对应楼层的数据，则显示"无"
@@ -682,7 +714,50 @@ function generateHtmlReport() {
   // 步骤 4: 将最终的HTML字符串写入到指定的输出文件中
   fs.writeFileSync(outputHtmlFile, finalHtml, "utf-8"); // 使用utf-8编码写入
   console.log(`HTML报告已成功生成到: ${outputHtmlFile}`); // 输出成功信息
+
+  // 生成导航页面，方便在各教学楼页面间切换
+  generateIndexPage(buildingArg);
 }
 
 // 执行主函数，开始生成HTML报告
 generateHtmlReport();
+
+// 生成index.html导航页面的函数
+function generateIndexPage(selectedBuilding) {
+  const options = Object.entries(buildingMap)
+    .map(([code, name]) => {
+      const selected = code === selectedBuilding ? "selected" : "";
+      return `<option value="${code}" ${selected}>${name}</option>`;
+    })
+    .join("\n");
+
+  const indexHtml = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>空闲教室查询导航</title>
+  <style>
+    body { text-align:center; font-family: Arial, sans-serif; }
+    iframe { width:100%; height:80vh; border:none; }
+  </style>
+</head>
+<body>
+  <h1>空闲教室查询导航</h1>
+  <select id="indexBuildingSelect">${options}</select>
+  <iframe id="buildingFrame" src="${selectedBuilding}.html"></iframe>
+  <script>
+    const select = document.getElementById('indexBuildingSelect');
+    const frame = document.getElementById('buildingFrame');
+    select.addEventListener('change', () => {
+      frame.src = select.value + '.html';
+    });
+    setInterval(() => {
+      frame.contentWindow.location.reload();
+    }, 5 * 60 * 1000); // 每5分钟刷新一次
+  </script>
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(__dirname, "..", "index.html"), indexHtml, "utf-8");
+  console.log("导航页面 index.html 已生成");
+}
