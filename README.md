@@ -1,5 +1,11 @@
 ## 东北大学秦皇岛分校工学馆空闲教室表
 
+### 切换教学楼
+
+运行 `node scripts/generate_report.js <楼代号>` 生成对应教学楼的 HTML 文件。
+可使用的楼代号与页面中的下拉列表保持一致，如 `gongxueguan`、`jichulou` 等。
+默认生成 `gongxueguan.html`，页面内包含下拉框，可在不同教学楼页面之间切换。
+
 本仓库通过部署在GitHub Actions上的Playwright测试来自动化获取空闲教室信息，并且生成对应HTML文件，自动发布在GitHub Pages上。
 
 可以通过更改scripts/generate_report.js来变换HTML样式。
