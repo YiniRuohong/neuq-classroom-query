@@ -4,7 +4,8 @@
   "description": "Automatic classroom availability checker for GXG",
   "scripts": {
     "test": "playwright test",
-    "report": "node scripts/generate_report.js"
+    "report": "node scripts/generate_report.js",
+    "report:all": "node scripts/generate_all_reports.js"
   },
   "dependencies": {
     "@playwright/test": "^1.52.0",

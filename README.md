@@ -6,6 +6,9 @@
 可使用的楼代号与页面中的下拉列表保持一致，如 `gongxueguan`、`jichulou` 等。
 默认生成 `gongxueguan.html`，页面内包含下拉框，可在不同教学楼页面之间切换。
 
+若希望一次性生成所有教学楼的页面，可执行 `node scripts/generate_all_reports.js`
+或通过 npm 脚本 `npm run report:all`。
+
 运行任意楼代号生成页面后，脚本会同时更新 `index.html` 作为导航页，
 其中的下拉列表可以在各教学楼页面之间切换并自动刷新。
 
@@ -18,8 +21,8 @@
 
 
 本地测试时，可在环境变量 `GXG_USERNAME` 和 `GXG_PASSWORD` 中提供登录凭据，
-或直接在 tests/classroom-query.spec.ts 中替换占位字符串。要查询不同教学楼，可通过
-环境变量 `GXG_BUILDING` 指定下拉框的值（如 `1` 表示工学馆，`2` 表示基础楼等）。
+或直接在 tests/classroom-query.spec.ts 中替换占位字符串。要查询特定教学楼，可通过
+环境变量 `GXG_BUILDING` 指定下拉框的值，支持用逗号分隔多个值（如 `1,2,3`）。如未指定则会遍历所有教学楼。
 
 
 若要部署到GitHub Actions中自动化执行，请在仓库设置中添加两个Repository secrets：`GXG_USERNAME`设为你的学号；`GXG_PASSWORD`设为你的密码。

@@ -164,7 +164,6 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // 定位“教学楼：”下拉选择框。使用ID选择器 '#building'。
   // [可调参数]: '#building' - 如果教学楼下拉框的HTML ID属性改变，此选择器需要更新。
   const buildingSelect = page.locator('#building');
-  const buildingValue = process.env.GXG_BUILDING || '1';
   const buildingMap = {
     '1': '工学馆',
     '2': '基础楼',
@@ -176,37 +175,36 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
     '8': '人文楼',
     '9': '科技楼',
   } as Record<string, string>;
-  const buildingName = buildingMap[buildingValue] || buildingValue;
-  console.log(`正在选择 "教学楼：" 为 "${buildingName}" (值为 "${buildingValue}")...`);
-  // 选择目标教学楼
-  await buildingSelect.selectOption({ value: buildingValue });
-  // 等待一小段时间，让选择操作完成后页面可能发生的动态更新（如下拉框联动）。
-  await page.waitForTimeout(interactionDelay);
 
-  // 调用辅助函数，为“起始日期”选择“今天”。
-  // [可调参数]: '#dateBegin' - 如果起始日期输入框的ID改变，需更新。
-  const dateBeginSuccess = await selectTodayInDatePicker('#dateBegin', '起始日期 (dateBegin)');
-  // 如果起始日期设置失败，则输出错误并终止后续操作。
-  if (!dateBeginSuccess) {
-    console.error("设置 '起始日期' 失败。正在中止后续表单操作。");
-    return; // 终止当前测试
-  }
-  await page.waitForTimeout(interactionDelay); // 短暂等待
+  const buildingValuesEnv = process.env.GXG_BUILDING;
+  const buildingValues = buildingValuesEnv
+    ? buildingValuesEnv.split(',').map(v => v.trim()).filter(v => v)
+    : Object.keys(buildingMap);
 
-  // 调用辅助函数，为“结束日期”选择“今天”。
-  // [可调参数]: '#dateEnd' - 如果结束日期输入框的ID改变，需更新。
-  const dateEndSuccess = await selectTodayInDatePicker('#dateEnd', '结束日期 (dateEnd)');
-   // 如果结束日期设置失败，则输出错误并终止后续操作。
-   if (!dateEndSuccess) {
-    console.error("设置 '结束日期' 失败。正在中止后续表单操作。");
-    return; // 终止当前测试
-  }
-  await page.waitForTimeout(operationDelay); // 较长等待，准备进入循环查询
+  for (const buildingValue of buildingValues) {
+    const buildingName = buildingMap[buildingValue] || buildingValue;
+    console.log(`正在选择 "教学楼：" 为 "${buildingName}" (值为 "${buildingValue}")...`);
+    await buildingSelect.selectOption({ value: buildingValue });
+    await page.waitForTimeout(interactionDelay);
 
-  // --- 遍历定义好的时间段，执行查询并保存结果 ---
-  for (const slot of timeSlots) { // slot 是 timeSlots 数组中的一个时间段对象
+    const dateBeginSuccess = await selectTodayInDatePicker('#dateBegin', '起始日期 (dateBegin)');
+    if (!dateBeginSuccess) {
+      console.error("设置 '起始日期' 失败。正在中止后续表单操作。");
+      return;
+    }
+    await page.waitForTimeout(interactionDelay);
+
+    const dateEndSuccess = await selectTodayInDatePicker('#dateEnd', '结束日期 (dateEnd)');
+    if (!dateEndSuccess) {
+      console.error("设置 '结束日期' 失败。正在中止后续表单操作。");
+      return;
+    }
+    await page.waitForTimeout(operationDelay);
+
+    // --- 遍历定义好的时间段，执行查询并保存结果 ---
+    for (const slot of timeSlots) { // slot 是 timeSlots 数组中的一个时间段对象
     // 为当前时间段的查询操作创建一个计时器标签，用于性能分析。
-    const queryLabel = `QueryForSlot_${slot.fileSuffix}`;
+    const queryLabel = `QueryForSlot_${buildingValue}_${slot.fileSuffix}`;
     console.time(queryLabel); // 开始计时
 
     console.log(`\n--- 正在为时间段 ${slot.fileSuffix} 执行查询 ---`); // 输出当前正在查询的时间段
@@ -316,8 +314,8 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
       }
 
       if (jsonData.length > 0) { // 如果成功解析到数据
-          // 构建输出JSON文件的名称，包含当前查询的时间段后缀。
-          const outputFileName = `classroom_results_${slot.fileSuffix}.json`;
+          // 构建输出JSON文件的名称，包含教学楼及当前查询的时间段后缀。
+          const outputFileName = `classroom_results_${buildingValue}_${slot.fileSuffix}.json`;
           // 使用path.join安全地构建完整的文件路径，默认输出到项目根目录。
           // [可调参数]: outputFileName 或 path.join() 的参数 - 如果希望输出到特定目录，可修改路径。
           const outputFilePath = path.join('output', outputFileName);
@@ -342,7 +340,10 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
     console.timeEnd(queryLabel); // 结束当前时间段查询操作的总计时
     // 在开始下一个时间段的查询之前，等待一段固定时间。
     await page.waitForTimeout(operationDelay);
-  } // for循环结束，完成所有定义时间段的查询
+    } // timeSlots 循环结束
+
+    console.log(`教学楼 ${buildingName} 查询完毕。`);
+  } // buildingValues 循环结束
 
   console.log('\n所有时间段查询测试脚本执行完毕。'); // 测试结束的标志性输出
 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>空闲教室查询导航</title>
+  <style>
+    body { text-align:center; font-family: Arial, sans-serif; }
+    iframe { width:100%; height:80vh; border:none; }
+  </style>
+</head>
+<body>
+  <h1>空闲教室查询导航</h1>
+  <select id="indexBuildingSelect"><option value="gongxueguan" >工学馆</option>
+<option value="jichulou" >基础楼</option>
+<option value="shiyanlou" >综合实验楼</option>
+<option value="dizhilou" >地质楼</option>
+<option value="guanlilou" >管理楼</option>
+<option value="dahuiguan" >大学会馆</option>
+<option value="jiusy" >旧实验楼</option>
+<option value="renwenlou" >人文楼</option>
+<option value="keji" selected>科技楼</option></select>
+  <iframe id="buildingFrame" src="keji.html"></iframe>
+  <script>
+    const select = document.getElementById('indexBuildingSelect');
+    const frame = document.getElementById('buildingFrame');
+    select.addEventListener('change', () => {
+      frame.src = select.value + '.html';
+    });
+    setInterval(() => {
+      frame.contentWindow.location.reload();
+    }, 5 * 60 * 1000); // 每5分钟刷新一次
+  </script>
+</body>
+</html>

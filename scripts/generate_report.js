@@ -16,6 +16,18 @@ const buildingMap = {
   keji: "科技楼",
 };
 const buildingName = buildingMap[buildingArg] || "工学馆";
+const buildingNumberMap = {
+  gongxueguan: '1',
+  jichulou: '2',
+  shiyanlou: '3',
+  dizhilou: '4',
+  guanlilou: '5',
+  dahuiguan: '6',
+  jiusy: '7',
+  renwenlou: '8',
+  keji: '9',
+};
+const buildingNumber = buildingNumberMap[buildingArg] || '1';
 
 // HTML 样板字符串
 const htmlTemplate = `
@@ -474,7 +486,7 @@ function calculateAllDayFreeClassrooms() {
 
     // 遍历所有独立小节的时间段
     for (const slotMapping of individualSlotMappings) {
-        const jsonFilePath = path.join(jsonDir, `classroom_results_${slotMapping.fileSuffix}.json`); // 构建JSON文件路径
+        const jsonFilePath = path.join(jsonDir, `classroom_results_${buildingNumber}_${slotMapping.fileSuffix}.json`); // 构建JSON文件路径
         let currentSlotClassrooms = new Set(); // 当前小节的空闲教室
 
         // 检查JSON文件是否存在
@@ -647,7 +659,7 @@ function generateHtmlReport() {
         }
 
         // 构建当前时间段对应的JSON文件路径
-        const jsonFilePath = path.join(jsonDir, `classroom_results_${slotMapping.fileSuffix}.json`);
+        const jsonFilePath = path.join(jsonDir, `classroom_results_${buildingNumber}_${slotMapping.fileSuffix}.json`);
         let currentJsonData = null; // 用于存储从JSON文件读取的原始数据
         let processedFloors; // 用于存储处理后的按楼层组织的教室数据
 
