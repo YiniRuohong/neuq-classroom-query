@@ -51,6 +51,7 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // 定位登录按钮。使用复合选择器，匹配 <button> 元素，且其 class 包含 'submitBtn'，type 属性为 'submit'。
   // [可调参数]: 'button.submitBtn[type="submit"]' - 如果登录按钮的HTML标签、类名或属性发生变化，此选择器需要更新。
   const loginButton = page.locator('button.submitBtn[type="submit"]');
+
   console.log('正在点击登录按钮...');
   await loginButton.click();
 
