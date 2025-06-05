@@ -714,7 +714,50 @@ function generateHtmlReport() {
   // 步骤 4: 将最终的HTML字符串写入到指定的输出文件中
   fs.writeFileSync(outputHtmlFile, finalHtml, "utf-8"); // 使用utf-8编码写入
   console.log(`HTML报告已成功生成到: ${outputHtmlFile}`); // 输出成功信息
+
+  // 生成导航页面，方便在各教学楼页面间切换
+  generateIndexPage(buildingArg);
 }
 
 // 执行主函数，开始生成HTML报告
 generateHtmlReport();
+
+// 生成index.html导航页面的函数
+function generateIndexPage(selectedBuilding) {
+  const options = Object.entries(buildingMap)
+    .map(([code, name]) => {
+      const selected = code === selectedBuilding ? "selected" : "";
+      return `<option value="${code}" ${selected}>${name}</option>`;
+    })
+    .join("\n");
+
+  const indexHtml = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>空闲教室查询导航</title>
+  <style>
+    body { text-align:center; font-family: Arial, sans-serif; }
+    iframe { width:100%; height:80vh; border:none; }
+  </style>
+</head>
+<body>
+  <h1>空闲教室查询导航</h1>
+  <select id="indexBuildingSelect">${options}</select>
+  <iframe id="buildingFrame" src="${selectedBuilding}.html"></iframe>
+  <script>
+    const select = document.getElementById('indexBuildingSelect');
+    const frame = document.getElementById('buildingFrame');
+    select.addEventListener('change', () => {
+      frame.src = select.value + '.html';
+    });
+    setInterval(() => {
+      frame.contentWindow.location.reload();
+    }, 5 * 60 * 1000); // 每5分钟刷新一次
+  </script>
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(__dirname, "..", "index.html"), indexHtml, "utf-8");
+  console.log("导航页面 index.html 已生成");
+}

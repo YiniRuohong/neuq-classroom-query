@@ -32,9 +32,9 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // [可调参数]: timeout: 100000 - 如果页面加载特别慢，导致输入框长时间不可见，可以增加此超时值。
   await usernameInput.waitFor({ state: 'visible', timeout: 100000 });
   console.log('登录页面已加载。正在填写用户名...');
-  // 填充用户名。
-  // [重要/可调参数]: 'YOUR_ACTUAL_USERNAME' - 这是实际的用户名，运行测试前务必替换为您自己的有效用户名。
-  await usernameInput.fill('YOUR_ACTUAL_USERNAME');
+  // 从环境变量读取用户名，若未设置则使用占位值。
+  const username = process.env.GXG_USERNAME || 'YOUR_ACTUAL_USERNAME';
+  await usernameInput.fill(username);
   // 在填充操作后等待一小段时间。
   await page.waitForTimeout(interactionDelay);
 
@@ -42,9 +42,9 @@ test('登录并按多时间段查询空闲教室测试', async ({ page }) => {
   // [可调参数]: '#password' - 如果密码输入框的HTML ID属性改变，此选择器需要更新。
   const passwordInput = page.locator('#password');
   console.log('正在填写密码...');
-  // 填充密码。
-  // [重要/可调参数]: 'YOUR_ACTUAL_PASSWORD' - 这是实际的密码，运行测试前务必替换为您自己的有效密码。
-  await passwordInput.fill('YOUR_ACTUAL_PASSWORD');
+  // 从环境变量读取密码，若未设置则使用占位值。
+  const password = process.env.GXG_PASSWORD || 'YOUR_ACTUAL_PASSWORD';
+  await passwordInput.fill(password);
   // 在填充操作后等待一小段时间。
   await page.waitForTimeout(interactionDelay);
 
