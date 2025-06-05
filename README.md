@@ -5,6 +5,7 @@
 运行 `node scripts/generate_report.js <楼代号>` 生成对应教学楼的 HTML 文件。
 可使用的楼代号与页面中的下拉列表保持一致，如 `gongxueguan`、`jichulou` 等。
 默认生成 `gongxueguan.html`，页面内包含下拉框，可在不同教学楼页面之间切换。
+
 运行任意楼代号生成页面后，脚本会同时更新 `index.html` 作为导航页，
 其中的下拉列表可以在各教学楼页面之间切换并自动刷新。
 
