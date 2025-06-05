@@ -13,10 +13,10 @@ const htmlTemplate = `
     <title>东秦工学馆空闲教室表</title>
     <style>
         body {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 30px;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: monospace;
             line-height: 1.6;
             color: #333;
         }
@@ -52,11 +52,12 @@ const htmlTemplate = `
 
 <body>
     <h1>current-date 东秦工学馆空闲教室表</h1>
-    <p>本空闲教室表更新于YYYY/MM/DD HH:MM</p>
-    <p>Powered by Tsiaohan Wang</p>
+    <p align=left>本空闲教室表更新于YYYY/MM/DD HH:MM</p>
+    <p align=center>内容仅供参考，实际请以<a href="https://jwxt.neuq.edu.cn/">教务系统</a>查询结果为准</p>
+    <p align=right>Powered by Tsiaohan Wang <a href="https://github.com/TsiaohanWang/neuq-classroom-query">项目入口</a></p>
     <hr>
     <ul>
-        <li>上午第1-2节</li>
+        <li style="font-weight: bold; font-size: 18px;">上午第1-2节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -67,37 +68,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>上午第3-4节</li>
+        <li style="font-weight: bold; font-size: 18px;">上午第3-4节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -108,37 +109,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>下午第5-6节</li>
+        <li style="font-weight: bold; font-size: 18px;">下午第5-6节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -149,37 +150,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>下午第7-8节</li>
+        <li style="font-weight: bold; font-size: 18px;">下午第7-8节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -190,37 +191,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>晚上第9-10节</li>
+        <li style="font-weight: bold; font-size: 18px;">晚上第9-10节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -231,37 +232,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>晚上第11-12节</li>
+        <li style="font-weight: bold; font-size: 18px;">晚上第11-12节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -272,37 +273,37 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
             </table>
         </li>
-        <li>昼间第1-8节</li>
+        <li style="font-weight: bold; font-size: 18px;">昼间第1-8节</li>
         <li>
             <table align="center" border="1" width="100%" cellpadding="5" style="border-collapse: collapse;">
                 <thead>
@@ -313,31 +314,31 @@ const htmlTemplate = `
                 </thead>
                 <tbody>
                     <tr>
-                        <td>工学馆1F</td>
+                        <td style="font-weight: bold; font-size: 16px;">1F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆2F</td>
+                        <td style="font-weight: bold; font-size: 16px;">2F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆3F</td>
+                        <td style="font-weight: bold; font-size: 16px;">3F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆4F</td>
+                        <td style="font-weight: bold; font-size: 16px;">4F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆5F</td>
+                        <td style="font-weight: bold; font-size: 16px;">5F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆6F</td>
+                        <td style="font-weight: bold; font-size: 16px;">6F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                     <tr>
-                        <td>工学馆7F</td>
+                        <td style="font-weight: bold; font-size: 16px;">7F</td>
                         <td>“这里填写对应的教室号，以空格分隔”</td>
                     </tr>
                 </tbody>
@@ -470,8 +471,8 @@ function generateHtmlReport() {
       p.textContent = `本空闲教室表更新于${getBeijingTime()}`;
     }
   });
-    const h1s = document.querySelectorAll("h1");
-const timestampPlaceholder2 = "current-date 东秦工学馆空闲教室表";
+  const h1s = document.querySelectorAll("h1");
+  const timestampPlaceholder2 = "current-date 东秦工学馆空闲教室表";
   h1s.forEach((h1) => {
     if (h1.textContent.includes(timestampPlaceholder2)) {
       h1.textContent = `${getBeijingDate()} 东秦工学馆空闲教室表`;
