@@ -6,7 +6,37 @@
 后访问 `index.html`，这样浏览器才可以正确读取 `output` 目录中的 JSON 文
 件并展示表格。
 
-页面首先尝试读取 `classroom_results_<楼号>_<时间段>.json`，若不存在则会
+若要部署到 GitHub Actions 中自动化执行，请在仓库设置中添加两个 Repository secrets：`GXG_USERNAME` 设为你的学号；`GXG_PASSWORD` 设为你的密码。
+
+然后在 `.github/workflows` 目录新建 `scrape.yml`，内容如下：
+
+```yaml
+name: Update classroom data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+        env:
+          GXG_USERNAME: ${{ secrets.GXG_USERNAME }}
+          GXG_PASSWORD: ${{ secrets.GXG_PASSWORD }}
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+```
+
+该流程会在每天 22 点自动执行抓取任务，并将生成的 JSON 与页面发布到 GitHub Pages。
 退回到旧式的 `classroom_results_<时间段>.json`。
 
 本仓库通过部署在 GitHub Actions 上的 Playwright 测试自动获取空闲教室信息，
