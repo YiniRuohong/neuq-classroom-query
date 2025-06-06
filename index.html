@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>东秦空闲教室表</title>
+  <style>
+    body { max-width: 1200px; margin:0 auto; font-family: monospace; font-size:13px; line-height:1.6; color:#333; }
+    ul { list-style: none; padding:0; text-align:center; }
+    li { margin: 15px 0; }
+    table { margin:0 auto; border-collapse: collapse; width:100%; }
+    table, th, td { border:1px solid #000; }
+    th { font-size:12px; }
+    td { padding:5px; }
+    strong { color:#4b0082; }
+  </style>
+</head>
+<body>
+  <div style="text-align:center;margin-bottom:20px;">
+    <label for="buildingSelect">切换教学楼：</label>
+    <select id="buildingSelect"></select>
+  </div>
+  <h1 id="title">空闲教室表</h1>
+  <p id="timestamp"></p>
+  <p align="center"><u>下划线</u>表示该教室在上一时间段未处于空闲状态</p>
+  <p align="center"><strong>靛色粗体</strong>表示该教室全天(第1-12节)处于空闲</p>
+  <p align="center">内容仅供参考，实际请以<a href="https://jwxt.neuq.edu.cn/">教务系统</a>查询结果为准</p>
+  <hr>
+  <ul id="slots"></ul>
+<script>
+const buildingMap = {
+  gongxueguan:{name:'工学馆',number:'1'},
+  jichulou:{name:'基础楼',number:'2'},
+  shiyanlou:{name:'综合实验楼',number:'3'},
+  dizhilou:{name:'地质楼',number:'4'},
+  guanlilou:{name:'管理楼',number:'5'},
+  dahuiguan:{name:'大学会馆',number:'6'},
+  jiusy:{name:'旧实验楼',number:'7'},
+  renwenlou:{name:'人文楼',number:'8'},
+  keji:{name:'科技楼',number:'9'}
+};
+const timeSlots = [
+  {label:'🏙上午第1-2节',suffix:'1-2'},
+  {label:'🏙上午第3-4节',suffix:'3-4'},
+  {label:'🌇下午第5-6节',suffix:'5-6'},
+  {label:'🌇下午第7-8节',suffix:'7-8'},
+  {label:'🏙昼间第1-8节',suffix:'1-8'},
+  {label:'🌃晚上第9-10节',suffix:'9-10'},
+  {label:'🌃晚上第11-12节',suffix:'11-12'}
+];
+const select = document.getElementById('buildingSelect');
+for(const code in buildingMap){
+  const opt=document.createElement('option');
+  opt.value=code; opt.textContent=buildingMap[code].name;
+  select.appendChild(opt);
+}
+function parseRooms(data, buildingName){
+  const floors={'1F':[], '2F':[], '3F':[], '4F':[], '5F':[], '6F':[], '7F':[]};
+  const set=new Set();
+  if(Array.isArray(data)){
+    for(const e of data){
+      if(e['教学楼']===buildingName && e['名称']){
+        let name=e['名称'];
+        if(name.startsWith(buildingName)) name=name.slice(buildingName.length).trim();
+        if(/^\d+$/.test(name)){
+          const f=name.charAt(0)+'F';
+          if(floors[f]) floors[f].push(name);
+          set.add(name);
+        }
+      }
+    }
+  }
+  for(const f in floors){
+    floors[f]=floors[f].sort((a,b)=>parseInt(a)-parseInt(b));
+  }
+  return {floors,set};
+}
+function buildTables(){
+  const ul=document.getElementById('slots');
+  ul.innerHTML='';
+  for(const slot of timeSlots){
+    const liLabel=document.createElement('li');
+    liLabel.style.fontWeight='bold';
+    liLabel.style.fontSize='18px';
+    liLabel.textContent=slot.label;
+    ul.appendChild(liLabel);
+    const liTable=document.createElement('li');
+    const table=document.createElement('table');
+    const thead=document.createElement('thead');
+    thead.innerHTML='<tr><th style="font-size:12px">楼层</th><th style="font-size:12px">教室</th></tr>';
+    table.appendChild(thead);
+    const tbody=document.createElement('tbody');
+    ['1F','2F','3F','4F','5F','6F','7F'].forEach(f=>{
+      const tr=document.createElement('tr');
+      const tdFloor=document.createElement('td');
+      tdFloor.style.fontWeight='bold';
+      tdFloor.style.fontSize='16px';
+      tdFloor.textContent=f;
+      const tdRooms=document.createElement('td');
+      tdRooms.textContent='加载中...';
+      tdRooms.setAttribute('data-floor',f);
+      tr.appendChild(tdFloor); tr.appendChild(tdRooms);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody); liTable.appendChild(table); ul.appendChild(liTable);
+  }
+}
+async function loadBuilding(code){
+  const info=buildingMap[code]; if(!info) return;
+  document.getElementById('title').textContent=new Date().toLocaleDateString('zh-CN')+' 🏫东秦'+info.name+'空闲教室表';
+  document.getElementById('timestamp').textContent='本空闲教室表更新于 '+new Date().toLocaleString('zh-CN', {hour12:false});
+  const tables=document.querySelectorAll('#slots table');
+  const slotResults=[];
+  for(let i=0;i<timeSlots.length;i++){
+    const slot=timeSlots[i];
+    const base='./output';
+    const paths=[
+      `${base}/classroom_results_${info.number}_${slot.suffix}.json`,
+      `${base}/classroom_results_${slot.suffix}.json`
+    ];
+    let data=null;
+    for(const p of paths){
+      try{
+        const res=await fetch(p);
+        if(res.ok){
+          data=await res.json();
+          break;
+        }
+      }catch(e){
+        console.warn('无法加载 '+p, e);
+      }
+    }
+    if(data){
+      slotResults[i]=parseRooms(data, info.name);
+    }else{
+      slotResults[i]=null;
+    }
+  }
+  // 计算全天空闲教室集合
+  const allDaySlots=['1-2','3-4','5-6','7-8','9-10','11-12'];
+  let allDaySet=null;
+  for(let i=0;i<timeSlots.length;i++){
+    const slot=timeSlots[i];
+    if(allDaySlots.includes(slot.suffix) && slotResults[i]){
+      const set=slotResults[i].set;
+      if(allDaySet===null) allDaySet=new Set(set);
+      else allDaySet=new Set([...allDaySet].filter(x=>set.has(x)));
+    }
+  }
+  if(allDaySet===null) allDaySet=new Set();
+
+  // 填充表格数据并应用样式
+  for(let i=0;i<timeSlots.length;i++){
+    const result=slotResults[i];
+    const rows=tables[i].querySelectorAll('tbody tr');
+    if(result){
+      const floors=result.floors;
+      for(const row of rows){
+        const f=row.querySelector('td[data-floor]').getAttribute('data-floor');
+        const rooms=floors[f];
+        if(!rooms || rooms.length===0){
+          row.lastChild.textContent='无';
+          continue;
+        }
+        const prevSet=i>0 && slotResults[i-1]?slotResults[i-1].set:null;
+        const html=rooms.map(r=>{
+          let h=r;
+          if(allDaySet.has(r)) h=`<strong>${h}</strong>`;
+          if(prevSet && !prevSet.has(r)) h=`<u>${h}</u>`;
+          return h;
+        }).join(' ');
+        row.lastChild.innerHTML=html;
+      }
+    }else{
+      rows.forEach(row=>{row.lastChild.textContent='暂无数据';});
+    }
+  }
+}
+buildTables();
+select.addEventListener('change',()=>loadBuilding(select.value));
+loadBuilding(Object.keys(buildingMap)[0]);
+</script>
+</body>
+</html>

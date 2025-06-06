@@ -1,19 +1,13 @@
 {
-  "name": "classroom-query-and-deploy-automation",
+  "name": "gxg-classroom-checker",
   "version": "1.0.0",
-  "description": "NEUQ classroom availability query and deploy automation",
+  "description": "Automatic classroom availability checker for GXG",
   "scripts": {
-    "test": "playwright test",
-    "test:classroom": "playwright test tests/classroom_query.spec.ts",
-    "process": "node scripts/process_json.js",
-    "generate": "node scripts/generate_html.js"
+    "test": "playwright test"
   },
   "dependencies": {
+    "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.29",
-    "jsdom": "^26.1.0",
     "playwright": "^1.52.0"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.52.0"
   }
 }
