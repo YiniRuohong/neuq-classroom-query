@@ -5,6 +5,7 @@
 建议在本地启动一个静态HTTP服务（如 `npx serve` 或 `python -m http.server`）
 后访问 `index.html`，这样浏览器才可以正确读取 `output` 目录中的 JSON 文
 件并展示表格。
+
 页面首先尝试读取 `classroom_results_<楼号>_<时间段>.json`，若不存在则会
 退回到旧式的 `classroom_results_<时间段>.json`。
 
