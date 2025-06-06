@@ -106,9 +106,23 @@ async function loadBuilding(code){
   const tables=document.querySelectorAll('#slots table');
   for(let i=0;i<timeSlots.length;i++){
     const slot=timeSlots[i];
-    const path='output/classroom_results_'+info.number+'_'+slot.suffix+'.json';
-    try{
-      const data=await fetch(path).then(r=>r.json());
+    const paths=[
+      `output/classroom_results_${info.number}_${slot.suffix}.json`,
+      `output/classroom_results_${slot.suffix}.json`
+    ];
+    let data=null;
+    for(const p of paths){
+      try{
+        const res=await fetch(p);
+        if(res.ok){
+          data=await res.json();
+          break;
+        }
+      }catch(e){
+        // ignore and try next path
+      }
+    }
+    if(data){
       const floors=processData(data, info.name);
       const rows=tables[i].querySelectorAll('tbody tr');
       rows.forEach(row=>{
@@ -118,9 +132,9 @@ async function loadBuilding(code){
           row.lastChild.textContent=floors[floor]||'无';
         }
       });
-    }catch(e){
+    }else{
       const rows=tables[i].querySelectorAll('tbody tr td[data-floor]');
-      rows.forEach(cell=>cell.parentNode.lastChild.textContent='数据文件缺失');
+      rows.forEach(cell=>cell.parentNode.lastChild.textContent='暂无数据');
     }
   }
 }

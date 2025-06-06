@@ -4,8 +4,8 @@
 
 直接打开 `index.html` 即可查看空闲教室表。页面包含教学楼下拉框，选择后会
 动态加载 `output` 目录下的 JSON 数据并展示表格。
-JSON 文件命名为 `classroom_results_<楼号>_<时间段>.json`，楼号与下拉选项
-中的值相对应。
+页面首先尝试读取 `classroom_results_<楼号>_<时间段>.json`，若不存在则会
+退回到旧式的 `classroom_results_<时间段>.json`。
 
 本仓库通过部署在 GitHub Actions 上的 Playwright 测试自动获取空闲教室信息，
 并将 JSON 与本页面一同发布到 GitHub Pages。若需在本地重新生成数据，可运
