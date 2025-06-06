@@ -1,77 +1,23 @@
-name: Classroom Availability Check
-
+name: Update classroom data
 on:
-  schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次
-  push:
-    branches: [ main ]
   workflow_dispatch:
-
-# 添加权限配置
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
+  schedule:
+    - cron: '0 22 * * *'
 jobs:
-  test-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        persist-credentials: true
-        fetch-depth: 0
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        
-    - name: Install dependencies
-      run: |
-        npm install
-        npx playwright install --with-deps chromium
-        
-    - name: Run Playwright tests with credentials
-      timeout-minutes: 15
-      env:
-        USERNAME: ${{ secrets.GXG_USERNAME }}
-        PASSWORD: ${{ secrets.GXG_PASSWORD }}
-      run: |
-        export PLAYWRIGHT_TEST_TIMEOUT=600000
-        sed -i "s/YOUR_ACTUAL_USERNAME/$USERNAME/g" tests/classroom-query.spec.ts
-        sed -i "s/YOUR_ACTUAL_PASSWORD/$PASSWORD/g" tests/classroom-query.spec.ts
-        npx playwright test classroom-query.spec.ts
-        
-    - name: Generate HTML report
-      if: success()
-      run: node scripts/generate_report.js
-
-    - name: Setup Pages
-      if: success()
-      uses: actions/configure-pages@v4
-
-    - name: Upload artifact
-      if: success()
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: '.'
-
-    - name: Deploy to GitHub Pages
-      if: success()
-      id: deployment
-      uses: actions/deploy-pages@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Setup custom domain
-      if: success()
-      run: |
-        echo "classroom.wxh1104.online" > CNAME
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+        env:
+          GXG_USERNAME: ${{ secrets.GXG_USERNAME }}
+          GXG_PASSWORD: ${{ secrets.GXG_PASSWORD }}
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
