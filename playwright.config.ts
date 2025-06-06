@@ -11,6 +11,7 @@ const config: PlaywrightTestConfig = {
     browserName: 'chromium',
     executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
     headless: true,
+    ignoreHTTPSErrors: true,
   },
   retries: 0,  // 不重试失败的测试
   reporter: 'list',  // 使用列表形式的报告

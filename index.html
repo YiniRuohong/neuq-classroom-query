@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>东秦空闲教室表</title>
+  <style>
+    body { max-width: 1200px; margin:0 auto; font-family: monospace; font-size:13px; line-height:1.6; color:#333; }
+    ul { list-style: none; padding:0; text-align:center; }
+    li { margin: 15px 0; }
+    table { margin:0 auto; border-collapse: collapse; width:100%; }
+    table, th, td { border:1px solid #000; }
+    th { font-size:12px; }
+    td { padding:5px; }
+  </style>
+</head>
+<body>
+  <div style="text-align:center;margin-bottom:20px;">
+    <label for="buildingSelect">切换教学楼：</label>
+    <select id="buildingSelect"></select>
+  </div>
+  <h1 id="title">空闲教室表</h1>
+  <p id="timestamp"></p>
+  <hr>
+  <ul id="slots"></ul>
+<script>
+const buildingMap = {
+  gongxueguan:{name:'工学馆',number:'1'},
+  jichulou:{name:'基础楼',number:'2'},
+  shiyanlou:{name:'综合实验楼',number:'3'},
+  dizhilou:{name:'地质楼',number:'4'},
+  guanlilou:{name:'管理楼',number:'5'},
+  dahuiguan:{name:'大学会馆',number:'6'},
+  jiusy:{name:'旧实验楼',number:'7'},
+  renwenlou:{name:'人文楼',number:'8'},
+  keji:{name:'科技楼',number:'9'}
+};
+const timeSlots = [
+  {label:'🏙上午第1-2节',suffix:'1-2'},
+  {label:'🏙上午第3-4节',suffix:'3-4'},
+  {label:'🌇下午第5-6节',suffix:'5-6'},
+  {label:'🌇下午第7-8节',suffix:'7-8'},
+  {label:'🏙昼间第1-8节',suffix:'1-8'},
+  {label:'🌃晚上第9-10节',suffix:'9-10'},
+  {label:'🌃晚上第11-12节',suffix:'11-12'}
+];
+const select = document.getElementById('buildingSelect');
+for(const code in buildingMap){
+  const opt=document.createElement('option');
+  opt.value=code; opt.textContent=buildingMap[code].name;
+  select.appendChild(opt);
+}
+function processData(data, buildingName){
+  const floors={'1F':[], '2F':[], '3F':[], '4F':[], '5F':[], '6F':[], '7F':[]};
+  if(Array.isArray(data)){
+    for(const e of data){
+      if(e['教学楼']===buildingName && e['名称']){
+        let name=e['名称'];
+        if(name.startsWith(buildingName)) name=name.slice(buildingName.length).trim();
+        if(/^\d+$/.test(name)){
+          const f=name.charAt(0)+'F';
+          if(floors[f]) floors[f].push(name);
+        }
+      }
+    }
+  }
+  for(const f in floors){
+    if(floors[f].length) floors[f]=floors[f].sort((a,b)=>parseInt(a)-parseInt(b)).join(' ');
+    else floors[f]='无';
+  }
+  return floors;
+}
+function buildTables(){
+  const ul=document.getElementById('slots');
+  ul.innerHTML='';
+  for(const slot of timeSlots){
+    const liLabel=document.createElement('li');
+    liLabel.style.fontWeight='bold';
+    liLabel.style.fontSize='18px';
+    liLabel.textContent=slot.label;
+    ul.appendChild(liLabel);
+    const liTable=document.createElement('li');
+    const table=document.createElement('table');
+    const thead=document.createElement('thead');
+    thead.innerHTML='<tr><th style="font-size:12px">楼层</th><th style="font-size:12px">教室</th></tr>';
+    table.appendChild(thead);
+    const tbody=document.createElement('tbody');
+    ['1F','2F','3F','4F','5F','6F','7F'].forEach(f=>{
+      const tr=document.createElement('tr');
+      const tdFloor=document.createElement('td');
+      tdFloor.style.fontWeight='bold';
+      tdFloor.style.fontSize='16px';
+      tdFloor.textContent=f;
+      const tdRooms=document.createElement('td');
+      tdRooms.textContent='加载中...';
+      tdRooms.setAttribute('data-floor',f);
+      tr.appendChild(tdFloor); tr.appendChild(tdRooms);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody); liTable.appendChild(table); ul.appendChild(liTable);
+  }
+}
+async function loadBuilding(code){
+  const info=buildingMap[code]; if(!info) return;
+  document.getElementById('title').textContent=new Date().toLocaleDateString('zh-CN')+' 🏫东秦'+info.name+'空闲教室表';
+  document.getElementById('timestamp').textContent='本空闲教室表更新于 '+new Date().toLocaleString('zh-CN', {hour12:false});
+  const tables=document.querySelectorAll('#slots table');
+  for(let i=0;i<timeSlots.length;i++){
+    const slot=timeSlots[i];
+    const path='output/classroom_results_'+info.number+'_'+slot.suffix+'.json';
+    try{
+      const data=await fetch(path).then(r=>r.json());
+      const floors=processData(data, info.name);
+      const rows=tables[i].querySelectorAll('tbody tr');
+      rows.forEach(row=>{
+        const f=row.querySelector('td[data-floor]');
+        if(f){
+          const floor=f.getAttribute('data-floor');
+          row.lastChild.textContent=floors[floor]||'无';
+        }
+      });
+    }catch(e){
+      const rows=tables[i].querySelectorAll('tbody tr td[data-floor]');
+      rows.forEach(cell=>cell.parentNode.lastChild.textContent='数据文件缺失');
+    }
+  }
+}
+buildTables();
+select.addEventListener('change',()=>loadBuilding(select.value));
+loadBuilding(Object.keys(buildingMap)[0]);
+</script>
+</body>
+</html>
