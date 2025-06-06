@@ -638,8 +638,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL1-2">KJL1-2占位符</td>
-                        <td id="RWL1-2">RWL1-2占位符</td>
+                        <td id="KJL1-2" style="font-size: small">KJL1-2占位符</td>
+                        <td id="RWL1-2" style="font-size: small">RWL1-2占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -652,8 +652,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL3-4">KJL3-4占位符</td>
-                        <td id="RWL3-4">RWL3-4占位符</td>
+                        <td id="KJL3-4" style="font-size: small">KJL3-4占位符</td>
+                        <td id="RWL3-4" style="font-size: small">RWL3-4占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -666,8 +666,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL5-6">KJL5-6占位符</td>
-                        <td id="RWL5-6">RWL5-6占位符</td>
+                        <td id="KJL5-6" style="font-size: small">KJL5-6占位符</td>
+                        <td id="RWL5-6" style="font-size: small">RWL5-6占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -680,8 +680,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL7-8">KJL7-8占位符</td>
-                        <td id="RWL7-8">RWL7-8占位符</td>
+                        <td id="KJL7-8" style="font-size: small">KJL7-8占位符</td>
+                        <td id="RWL7-8" style="font-size: small">RWL7-8占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -694,8 +694,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL9-10">KJL9-10占位符</td>
-                        <td id="RWL9-10">RWL9-10占位符</td>
+                        <td id="KJL9-10" style="font-size: small">KJL9-10占位符</td>
+                        <td id="RWL9-10" style="font-size: small">RWL9-10占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -708,8 +708,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL11-12">KJL11-12占位符</td>
-                        <td id="RWL11-12">RWL11-12占位符</td>
+                        <td id="KJL11-12" style="font-size: small">KJL11-12占位符</td>
+                        <td id="RWL11-12" style="font-size: small">RWL11-12占位符</td>
                     </tr>
                 </tbody>
             </table>
@@ -722,8 +722,8 @@ const htmlTemplate = `
                         <td>人文楼</td>
                     </tr>
                     <tr class="classroom-row">
-                        <td id="KJL1-8">KJL1-8占位符</td>
-                        <td id="RWL1-8">RWL1-8占位符</td>
+                        <td id="KJL1-8" style="font-size: small">KJL1-8占位符</td>
+                        <td id="RWL1-8" style="font-size: small">RWL1-8占位符</td>
                     </tr>
                 </tbody>
             </table>
