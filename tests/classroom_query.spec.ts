@@ -76,20 +76,7 @@ test("登录并按多时间段查询空闲教室测试", async ({ page }) => {
   // 定位空闲教室查询页面的主查询表单容器。使用ID选择器 '#actionForm'。
   // [可调参数]: '#actionForm' - 如果查询表单容器的HTML `id` 属性改变，此选择器需要更新。
   const queryForm = page.locator("#actionForm");
-  // 等待查询表单容器在页面上变为可见状态，设置最长等待时间。
-  // [可调参数]: timeout: 30000 - 如果查询页面加载缓慢，可增加此超时值。
-  // 增加对页面加载状态的检查，如果超时，打印页面内容帮助调试
-  try {
-    await queryForm.waitFor({ state: "visible", timeout: 45000 }); // 增加超时
-  } catch (e) {
-    console.error("等待查询表单 (#actionForm) 可见超时。页面可能未正确加载。");
-    // await page.screenshot({ path: 'query_form_load_failure.png' });
-    // console.log("当前页面标题:", await page.title());
-    // console.log("当前页面URL:", page.url());
-    // console.log("页面HTML (部分):", (await page.content()).substring(0, 2000));
-    throw e; // 重新抛出错误，使测试失败
-  }
-  console.log("空闲教室查询页面已加载，查询表单可见。");
+
   // 等待一段固定的时间，让页面上的JavaScript和元素初始化完成。
   await page.waitForTimeout(operationDelay);
 
